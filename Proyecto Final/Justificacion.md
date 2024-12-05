@@ -1,73 +1,46 @@
-### **Justificación del Diseño del Sistema de Ventas en Línea**
+# **Justificación del Diseño del Sistema de Ventas en Línea**
 
-#### **Propósito del Sistema**
-El objetivo principal de este sistema es gestionar una tienda en línea que organiza y administra **productos**, **clientes** y **órdenes de compra** de manera eficiente y segura. Este diseño se enfoca en:
-1. **Facilidad de uso:** La interfaz y la base de datos evitan duplicados y ofrecen una gestión intuitiva.
-2. **Seguridad de datos:** Las restricciones de la base de datos aseguran la consistencia y evitan errores.
+El sistema de ventas en línea tiene por objetivo gestionar eficientemente las operaciones básicas de una tienda, como por ejemplo la administración de productos, clientes, órdenes de compra, entre otros.  
+	Este diseño busca ser más amigable con el usuario usando una estructura de datos que permite ser ejecutado de forma confiable, sin complicar al usuario.
 
------
+# **Entidades y Atributos**
 
-### **Entidades y Atributos**
-El diseño incluye las siguientes entidades clave, con sus respectivos atributos:
+El modelo de datos cuenta con cinco entidades que están diseñadas para cumplir con las necesidades del proyecto. Entre ellas podemos encontrar Productos, Clientes, Orden, Detalle de orden y Categorías.
 
-1. **Producto:**
-   - **Atributos:** id_producto, nombre, descripcion, precio, stock, categoria_id.
-   - **Ejemplo:** Productos organizados en categorías como "Alimentos", "Vestimenta", "Celulares", entre otros.
+* *Producto*: id\_producto, nombre, descripción, precio, stock, categoria\_id.  
+  Busca representar los productos disponibles en la tienda, dando datos relevantes como su nombre, una breve descripción, su valor, stock en tienda y a qué categoría pertenece.  
+* *Cliente*: id\_cliente, nombre, email, telefono, direccion.  
+  Almacena la información de los clientes para facilitar el procesamiento de órdenes y servicio al cliente.  
+* *Orden*: id\_orden, cliente\_id, fecha, total.  
+  Registra las compras realizadas relacionándolas a un cliente y sumando el total de compras.  
+* *DetalleOrden*: producto\_id, orden\_id, cantidad, precio.  
+  Registra los productos incluidos en cada orden y la cantidad adquirida y el total de la orden.  
+* *Categoria*: id\_categoria, nombre.  
+  Agrupa los productos por categorías para facilitar las búsquedas.
 
-2. **Cliente:**
-   - **Atributos:** id_cliente, nombre, email, telefono, direccion.
-   - **Función:** Almacenar información de contacto y ubicación de los clientes.
+# **Relaciones entre las Entidades**
 
-3. **Orden:**
-   - **Atributos:** id_orden, cliente_id, fecha, total.
-   - **Función:** Registrar cada transacción generada por los clientes.
+Las entidades están conectadas por las siguientes relaciones:
 
-4. **DetalleOrden:**
-   - **Atributos:** producto_id, cantidad, precio, orden_id.
-   - **Función:** Registrar los productos y cantidades específicas compradas en cada transacción.
+* *Cliente y Orden (Uno a Muchos)*: Un cliente puede realizar varias órdenes, pero cada orden pertenece a un solo cliente.  
+* *Orden y Producto (Muchos a Muchos*): Una orden puede incluir múltiples productos, y un producto puede aparecer en varias órdenes (la tabla DetalleOrden actúa como intermediaria).  
+* *Producto y Categoría (Muchos a Uno)*: Cada producto pertenece a una categoría, pero una categoría puede incluir varios productos.
 
-5. **Categoria:**
-   - **Atributos:** id_categoria, nombre.
-   - **Función:** Agrupar productos para facilitar la organización y búsqueda durante las compras.
+# **Normalización**
 
------
+Primera Forma Normal (1NF): Cada celda de las tablas contiene un único valor, sin listas o datos repetidos en una columna.  
+	Segunda Forma Normal (2NF): Los atributos dependen de la clave primaria de su tabla.  
+	Tercera Forma Normal (3NF): Cada atributo no clave depende únicamente de la clave primaria.
 
-### **Relaciones entre las Entidades**
-1. **Cliente y Orden (Uno a Muchos):** 
-   - Cada cliente puede realizar múltiples órdenes de compra.
-   
-2. **Orden y Producto (Muchos a Muchos):**
-   - Cada orden puede incluir varios productos, y cada producto puede estar en múltiples órdenes. 
-   - La tabla intermedia `DetalleOrden` gestiona esta relación.
+# **Integridad**
 
-3. **Producto y Categoria (Muchos a Uno):**
-   - Cada producto pertenece a una categoría específica, pero una categoría puede incluir múltiples productos.
+* *Llaves Primarias*: Identifican de manera única cada registro en las tablas (por ejemplo, id\_producto o id\_orden).  
+* *Llaves Foráneas*: Vinculan las tablas relacionadas, como cliente\_id en la tabla Orden y categoria\_id en la tabla Producto.  
+* *Validación de Transacciones:* Cada cambio en la base de datos (como agregar o actualizar datos) está protegido por transacciones que aseguran su éxito antes de confirmar los cambios.
 
------
+## **Procesos**
 
-### **Normalización de la Base de Datos**
-Para evitar redundancias y garantizar la eficiencia, la base de datos sigue las **tres primeras formas normales (3NF):**
+* *Gestión de Productos:* Permite agregar, actualizar, eliminar y consultar productos.  
+* *Gestión de Clientes:* Permite registrar y actualizar la información de clientes y visualizar los clientes ya registrados.  
+* *Procesamiento de Órdenes:* Crea órdenes asociadas a clientes específicos y lleva un registro de los productos comprados en cada orden.
 
-1. **Primera Forma Normal (1NF):**
-   - Cada celda contiene un solo valor; no hay listas ni datos agrupados en una misma columna.
-
-2. **Segunda Forma Normal (2NF):**
-   - Todos los atributos dependen completamente de la clave principal de su tabla.
-
-3. **Tercera Forma Normal (3NF):**
-   - No hay dependencias transitivas; es decir, ningún atributo depende de otro que no sea clave primaria.
-
------
-
-### **Integridad de los Datos**
-Se utilizan restricciones clave para garantizar consistencia y precisión:
-
-1. **Llaves Primarias:**
-   - Cada tabla tiene un identificador único, como id_producto, id_cliente o id_orden, para evitar duplicados.
-
-2. **Llaves Foráneas:**
-   - Conectan las tablas entre sí. Por ejemplo:
-     - Relación entre un cliente y las órdenes que realiza.
-     - Relación entre un producto y su categoría.
-
-Estas restricciones aseguran que los datos sean consistentes y estén organizados, garantizando un sistema confiable y escalable. Este diseño proporciona una solución robusta para la gestión de ventas en línea, con un enfoque en la eficiencia, la organización y la integridad de los datos.
